@@ -2,7 +2,7 @@ part of 'home_cubit.dart';
 
 enum HomeStatus { initial, disabled, loading, success, failure }
 
-enum Selected { defaultStt, defaultTts }
+enum Selected { defaultStt, defaultTts, polly }
 
 class HomeState extends Equatable {
   const HomeState({

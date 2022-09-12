@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-choobietalker-dev-230017-authRole",
+      "UnauthRoleArn": "arn:aws:iam::162170250812:role/amplify-choobietalker-dev-230017-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::162170250812:role/amplify-choobietalker-dev-230017-authRole",
+      "Region": "ap-southeast-1",
+      "DeploymentBucketName": "amplify-choobietalker-dev-230017-deployment",
+      "UnauthRoleName": "amplify-choobietalker-dev-230017-unauthRole",
+      "StackName": "amplify-choobietalker-dev-230017",
+      "StackId": "arn:aws:cloudformation:ap-southeast-1:162170250812:stack/amplify-choobietalker-dev-230017/21615fe0-3050-11ed-9a72-062447a9f8bc",
+      "AmplifyAppId": "dli07r4mzc16e"
+    }
+  }
+}

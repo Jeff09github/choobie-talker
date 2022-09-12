@@ -1,3 +1,4 @@
+import 'package:choobietalker/features/aws_polly/aws_polly.dart';
 import 'package:choobietalker/features/default_stt/bloc/default_stt_bloc.dart';
 import 'package:choobietalker/features/default_tts/view/default_tts_page.dart';
 import 'package:choobietalker/features/home/cubit/home_cubit.dart';
@@ -116,7 +117,14 @@ class SelectionView extends StatelessWidget {
             ),
             ListTile(
               title: Text('Amazon Polly STT'),
-              onTap: () {},
+              onTap:
+                  context.watch<HomeCubit>().state.status == HomeStatus.disabled
+                      ? null
+                      : () {
+                          context
+                              .read<HomeCubit>()
+                              .changeSelected(Selected.polly);
+                        },
             ),
             ListTile(
               title: Text('Amazon Polly TTS'),
@@ -175,6 +183,11 @@ class MainView extends StatelessWidget {
             return const MainViewWidget(
               content: DefaultTtsMain(),
               settings: DefaultTtsSettings(),
+            );
+          } else if (state.selected == Selected.polly) {
+            return const MainViewWidget(
+              content: AwsPollyPage(),
+              settings: Scaffold(),
             );
           } else {
             return Container();
