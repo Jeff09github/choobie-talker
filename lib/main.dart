@@ -23,7 +23,6 @@ class _MyAppState extends State<MyApp> {
   final colorScheme = ColorScheme.fromSeed(
       seedColor: Colors.white, brightness: Brightness.dark);
 
-  //BUG TO FIX
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

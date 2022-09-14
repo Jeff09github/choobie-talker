@@ -44,6 +44,7 @@ dependencies:
   # flutter_sound: ^9.2.13
   # audioplayers: ^1.0.1
   just_audio: ^0.9.28
+  aws_polly_api: ^1.2.0
 
 dev_dependencies:
   flutter_test:

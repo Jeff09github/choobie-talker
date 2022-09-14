@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:choobietalker/features/aws_polly/bloc/aws_polly_bloc.dart';
 import 'package:choobietalker/features/home/cubit/home_cubit.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,7 +13,7 @@ part 'default_stt_state.dart';
 
 class DefaultSttBloc extends Bloc<DefaultSttEvent, DefaultSttState> {
   DefaultSttBloc({
-    required this.defaultTtsBloc,
+    required this.awsPollyBloc,
     required this.homeCubit,
   }) : super(const DefaultSttState()) {
     on<DefaultSttInitialize>(_onDefaultSttInitialize);
@@ -24,7 +25,7 @@ class DefaultSttBloc extends Bloc<DefaultSttEvent, DefaultSttState> {
     on<ChangedRecognizedWords>(_onChangeRecognizedWords);
   }
 
-  final DefaultTtsBloc defaultTtsBloc;
+  final AwsPollyBloc awsPollyBloc;
 
   ///// Changed => UpdateStatus ? so i need one event for all changed value
 
@@ -63,12 +64,13 @@ class DefaultSttBloc extends Bloc<DefaultSttEvent, DefaultSttState> {
     if (state.isAvailable) {
       homeCubit.changeStatus(status: HomeStatus.disabled);
       await state.speechToText!.listen(
+        listenMode: ListenMode.dictation,
         onResult: (result) {
-          add(ChangedRecognizedWords(words: result.recognizedWords));
           if (result.finalResult) {
             add(LastHeardChanged(lastHeard: result.recognizedWords));
-            defaultTtsBloc
-                .add(PlayButtonTap(voiceText: result.recognizedWords));
+            add(ChangedRecognizedWords(words: result.recognizedWords));
+            awsPollyBloc
+                .add(AwsPollySynthesizeSpeech(text: result.recognizedWords));
           }
         },
         pauseFor: Duration(milliseconds: (state.pauseTime * 1000).round()),
@@ -92,7 +94,6 @@ class DefaultSttBloc extends Bloc<DefaultSttEvent, DefaultSttState> {
     emit(state.copyWith(
       status: DefaultSttStatus.done,
       lastHeard: event.lastHeard,
-      recognizedWords: 'Speech Log',
     ));
   }
 
@@ -102,7 +103,6 @@ class DefaultSttBloc extends Bloc<DefaultSttEvent, DefaultSttState> {
     totalHeard.write(state.recognizedWords);
     totalHeard.write('\n');
     totalHeard.write(event.words);
-
     emit(state.copyWith(recognizedWords: totalHeard.toString()));
   }
 
@@ -113,7 +113,9 @@ class DefaultSttBloc extends Bloc<DefaultSttEvent, DefaultSttState> {
 
   FutureOr<void> _onChangedPauseTime(
       ChangedPauseTime event, Emitter<DefaultSttState> emit) async {
-    emit(state.copyWith(pauseTime: event.value));
+    if (state.status != DefaultSttStatus.listening) {
+      emit(state.copyWith(pauseTime: event.value));
+    }
   }
 
   @override
