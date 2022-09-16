@@ -10,18 +10,27 @@ void main() {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({
     Key? key,
   }) : super(key: key);
 
-  //BUG TO FIX
-  //=> CLOSING BLOC PROVIDER AND CREATING AGAIN WILL NOT UPDATE STATE INSIDE "SPEECH TO TEXT ON STATUS CHANGED FUNCTION" MAKING LISTEN STOP AND WILL NOT LOOP
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final colorScheme = ColorScheme.fromSeed(
+      seedColor: Colors.white, brightness: Brightness.dark);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData.dark().copyWith(
+        // colorScheme: colorScheme,
+        // scaffoldBackgroundColor: colorScheme.background,
+        // appBarTheme: AppBarTheme(),
         useMaterial3: true,
       ),
       home: const HomePage(),

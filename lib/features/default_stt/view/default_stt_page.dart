@@ -21,7 +21,11 @@ class DefaultSttMain extends StatelessWidget {
               maxLines: 15,
               readOnly: true,
               decoration: InputDecoration(
-                hintText: context.watch<DefaultSttBloc>().state.recognizedWords.toString(),
+                hintText: context
+                    .watch<DefaultSttBloc>()
+                    .state
+                    .recognizedWords
+                    .toString(),
                 hintStyle: TextStyle(fontSize: 8.0),
                 border: OutlineInputBorder(),
               ),
@@ -46,21 +50,21 @@ class DefaultSttMain extends StatelessWidget {
             ),
           ],
         ),
-        state.isSubtitleOn
-            ? Container(
-                padding: EdgeInsets.all(8.0),
-                height: 130.0,
-                color: Colors.green,
-                alignment: Alignment.center,
-                child: Text(
-                  state.lastHeard,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 24.0,
-                  ),
-                ),
-              )
-            : SizedBox(),
+        // state.isSubtitleOn
+        //     ? Container(
+        //         padding: EdgeInsets.all(8.0),
+        //         height: 130.0,
+        //         color: Colors.green,
+        //         alignment: Alignment.center,
+        //         child: Text(
+        //           state.lastHeard,
+        //           textAlign: TextAlign.center,
+        //           style: TextStyle(
+        //             fontSize: 24.0,
+        //           ),
+        //         ),
+        //       )
+        //     : SizedBox(),
       ],
     );
   }
@@ -76,10 +80,8 @@ class DefaultSttSettings extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          'SETTINGS',
-          textAlign: TextAlign.center,
-        ),
+        Text('DEFAULT STT'),
+        Divider(),
         SizedBox(
           height: 8.0,
         ),
@@ -104,19 +106,19 @@ class DefaultSttSettings extends StatelessWidget {
         SizedBox(
           height: 8.0,
         ),
-        Row(
-          children: [
-            Text('Enable Subtitle'),
-            Switch(
-              value: state.isSubtitleOn,
-              onChanged: (value) {
-                context
-                    .read<DefaultSttBloc>()
-                    .add(ChangedSubtitleIsOn(value: value));
-              },
-            ),
-          ],
-        ),
+        // Row(
+        //   children: [
+        //     Text('Enable Subtitle'),
+        //     Switch(
+        //       value: state.isSubtitleOn,
+        //       onChanged: (value) {
+        //         context
+        //             .read<DefaultSttBloc>()
+        //             .add(ChangedSubtitleIsOn(value: value));
+        //       },
+        //     ),
+        //   ],
+        // ),
         Row(
           children: [
             Text('TTS to Link'),
@@ -124,8 +126,8 @@ class DefaultSttSettings extends StatelessWidget {
               width: 8.0,
             ),
             DropdownButton(
-                value: 'Default Tts',
-                items: <String>['Default Tts']
+                value: 'AWS Polly',
+                items: <String>['AWS Polly']
                     .map(
                       (e) => DropdownMenuItem(
                         value: e,

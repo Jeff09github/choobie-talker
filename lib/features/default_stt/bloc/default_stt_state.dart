@@ -8,7 +8,7 @@ class DefaultSttState extends Equatable {
     this.speechToText,
     this.isAvailable = false,
     this.lastHeard = "",
-    this.pauseTime = 1, //3 secs max //listenfore 30 secs max need to add
+    this.pauseTime = 1.5, //3 secs max //listenfore 30 secs max need to add
     this.isSubtitleOn = false,
     this.recognizedWords = 'Speech Log',
   });
