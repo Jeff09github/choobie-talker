@@ -2,12 +2,14 @@ import 'package:choobietalker/features/aws_polly/bloc/aws_polly_bloc.dart';
 import 'package:choobietalker/features/default_stt/bloc/default_stt_bloc.dart';
 import 'package:choobietalker/features/default_stt/default_stt.dart';
 import 'package:choobietalker/features/home/cubit/home_cubit.dart';
+import 'package:choobietalker/features/subtitle/bloc/subtitle_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../shared/repository/aws_polly_repo.dart';
 import '../../aws_polly/aws_polly.dart';
 import '../../default_tts/bloc/default_tts_bloc.dart';
+import '../../subtitle/subtitle.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -42,6 +44,9 @@ class HomePage extends StatelessWidget {
               awsPollyBloc: context.read<AwsPollyBloc>(),
             )..add(const DefaultSttInitialize()),
           ),
+          BlocProvider(
+            create: (context) => SubtitleBloc(),
+          )
         ],
         child: const HomeView(),
       ),
@@ -87,19 +92,7 @@ class HomeView extends StatelessWidget {
                 ],
               ),
             ),
-            Card(
-              color: Colors.green,
-              child: TextFormField(
-                textAlign: TextAlign.center,
-                enabled: false,
-                maxLines: 5,
-                decoration: InputDecoration(
-                  hintText: context.watch<DefaultSttBloc>().state.lastHeard,
-                  hintStyle: TextStyle(fontSize: 24.0, color: Colors.white),
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            ),
+            const SubtitlePage(),
           ],
         ),
       ),

@@ -80,7 +80,7 @@ class DefaultSttSettings extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('DEFAULT STT'),
+        Text('SPEECH TO TEXT'),
         Divider(),
         SizedBox(
           height: 8.0,
@@ -108,15 +108,20 @@ class DefaultSttSettings extends StatelessWidget {
         ),
         // Row(
         //   children: [
-        //     Text('Enable Subtitle'),
-        //     Switch(
-        //       value: state.isSubtitleOn,
-        //       onChanged: (value) {
-        //         context
-        //             .read<DefaultSttBloc>()
-        //             .add(ChangedSubtitleIsOn(value: value));
-        //       },
+        //     Text('Select Locale'),
+        //     SizedBox(
+        //       width: 8.0,
         //     ),
+        //     DropdownButton(
+        //         items: state.localNames
+        //             .map(
+        //               (e) => DropdownMenuItem(
+        //                 value: e,
+        //                 child: Text(e.name),
+        //               ),
+        //             )
+        //             .toList(),
+        //         onChanged: (newValue) {}),
         //   ],
         // ),
         Row(

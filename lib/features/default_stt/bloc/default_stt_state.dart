@@ -6,6 +6,7 @@ class DefaultSttState extends Equatable {
   const DefaultSttState({
     this.status = DefaultSttStatus.off,
     this.speechToText,
+    this.localNames = const [],
     this.isAvailable = false,
     this.lastHeard = "",
     this.pauseTime = 1.5, //3 secs max //listenfore 30 secs max need to add
@@ -14,6 +15,7 @@ class DefaultSttState extends Equatable {
   });
 
   final SpeechToText? speechToText;
+  final List<LocaleName> localNames;
   final DefaultSttStatus status;
   final bool isAvailable;
   final String lastHeard;
@@ -26,6 +28,7 @@ class DefaultSttState extends Equatable {
   DefaultSttState copyWith({
     DefaultSttStatus? status,
     SpeechToText? speechToText,
+    List<LocaleName>? localNames,
     bool? isAvailable,
     String? lastHeard,
     double? pauseTime,
@@ -35,6 +38,7 @@ class DefaultSttState extends Equatable {
       DefaultSttState(
         status: status ?? this.status,
         speechToText: speechToText ?? this.speechToText,
+        localNames: localNames ?? this.localNames,
         isAvailable: isAvailable ?? this.isAvailable,
         lastHeard: lastHeard ?? this.lastHeard,
         pauseTime: pauseTime ?? this.pauseTime,
@@ -46,6 +50,7 @@ class DefaultSttState extends Equatable {
   List<Object?> get props => [
         status,
         speechToText,
+        localNames,
         isAvailable,
         lastHeard,
         pauseTime,

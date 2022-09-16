@@ -6,7 +6,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
-import '../../default_tts/bloc/default_tts_bloc.dart';
 
 part 'default_stt_event.dart';
 part 'default_stt_state.dart';
@@ -52,11 +51,19 @@ class DefaultSttBloc extends Bloc<DefaultSttEvent, DefaultSttState> {
       debugLogging: true,
     );
 
-    emit(state.copyWith(
-      isAvailable: isAvailable,
-      speechToText: speechToText,
-      status: DefaultSttStatus.notListening,
-    ));
+
+    //////not implemented because it always return 0
+    final localNames = await speechToText.locales();
+    print(localNames.length);
+
+    emit(
+      state.copyWith(
+        isAvailable: isAvailable,
+        speechToText: speechToText,
+        localNames: localNames,
+        status: DefaultSttStatus.notListening,
+      ),
+    );
   }
 
   FutureOr<void> _onStartListening(
