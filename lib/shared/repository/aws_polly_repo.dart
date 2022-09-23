@@ -28,10 +28,10 @@ class AwsPollyApiRepo {
     final output = await _polly.synthesizeSpeech(
       outputFormat: OutputFormat.mp3,
       text: text,
+      textType: TextType.ssml,
       sampleRate: sampleRate,
       voiceId: voice.id!,
     );
     return output.audioStream;
   }
-
 }

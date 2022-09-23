@@ -14,7 +14,7 @@ part 'aws_polly_state.dart';
 
 class AwsPollyBloc extends Bloc<AwsPollyEvent, AwsPollyState> {
   AwsPollyBloc({required this.awsPollyApiRepo})
-      : super(AwsPollyState(filter: Filter())) {
+      : super(AwsPollyState(filter: Filter(gender: Gender.male))) {
     on<AwsPollyInitial>(_onAwsPollyInitial);
     on<AwsPollyChangedSelectedVoice>(_onAwsPollyChangedSelectedVoice);
     on<AwsPollyChangedFilter>(_onAwsPollyChangedFilter);
@@ -30,10 +30,13 @@ class AwsPollyBloc extends Bloc<AwsPollyEvent, AwsPollyState> {
     emit(state.copyWith(status: AwsPollyStatus.loading));
     await awsPollyApiRepo.init();
     final voices = await awsPollyApiRepo.getVoices();
+
+    final voice = voices.firstWhere((element) => element.name == 'Justin');
     emit(
       state.copyWith(
           status: AwsPollyStatus.success,
           voices: voices,
+          selectedVoice: voice,
           filteredVoices: voices),
     );
   }
@@ -65,7 +68,7 @@ class AwsPollyBloc extends Bloc<AwsPollyEvent, AwsPollyState> {
       AwsPollySynthesizeSpeech event, Emitter<AwsPollyState> emit) async {
     if (state.selectedVoice == null) return;
     final result = await awsPollyApiRepo.synthesizeSpeech(
-      text: event.text,
+      text: '<speak><prosody pitch="x-low">${event.text}.</prosody></speak>',
       voice: state.selectedVoice!,
       sampleRate: state.sampleRate,
     );

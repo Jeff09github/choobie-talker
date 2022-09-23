@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:choobietalker/features/aws_polly/bloc/aws_polly_bloc.dart';
 import 'package:choobietalker/features/home/cubit/home_cubit.dart';
+import 'package:choobietalker/features/subtitle/bloc/subtitle_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:speech_to_text/speech_to_text.dart';
-
 
 part 'default_stt_event.dart';
 part 'default_stt_state.dart';
@@ -13,20 +13,20 @@ part 'default_stt_state.dart';
 class DefaultSttBloc extends Bloc<DefaultSttEvent, DefaultSttState> {
   DefaultSttBloc({
     required this.awsPollyBloc,
+    required this.subtitleBloc,
     required this.homeCubit,
   }) : super(const DefaultSttState()) {
     on<DefaultSttInitialize>(_onDefaultSttInitialize);
     on<StartListening>(_onStartListening);
     on<StopListening>(_onStopListening);
     on<LastHeardChanged>(_onLastHeardChanged);
-    on<ChangedSubtitleIsOn>(_onChangedSubtitleIsOn);
     on<ChangedPauseTime>(_onChangedPauseTime);
     on<ChangedRecognizedWords>(_onChangeRecognizedWords);
+    on<ToggleLinkTts>(_onToggleLinkTts);
   }
 
   final AwsPollyBloc awsPollyBloc;
-
-  ///// Changed => UpdateStatus ? so i need one event for all changed value
+  final SubtitleBloc subtitleBloc;
 
   final HomeCubit homeCubit;
 
@@ -51,16 +51,15 @@ class DefaultSttBloc extends Bloc<DefaultSttEvent, DefaultSttState> {
       debugLogging: true,
     );
 
-
     //////not implemented because it always return 0
-    final localNames = await speechToText.locales();
-    print(localNames.length);
+    // final localNames = await speechToText.locales();
+    // print(localNames.length);
 
     emit(
       state.copyWith(
         isAvailable: isAvailable,
         speechToText: speechToText,
-        localNames: localNames,
+        // localNames: localNames,
         status: DefaultSttStatus.notListening,
       ),
     );
@@ -76,8 +75,13 @@ class DefaultSttBloc extends Bloc<DefaultSttEvent, DefaultSttState> {
           if (result.finalResult) {
             add(LastHeardChanged(lastHeard: result.recognizedWords));
             add(ChangedRecognizedWords(words: result.recognizedWords));
-            awsPollyBloc
-                .add(AwsPollySynthesizeSpeech(text: result.recognizedWords));
+
+            if (state.linkTts) {
+              awsPollyBloc
+                  .add(AwsPollySynthesizeSpeech(text: result.recognizedWords));
+            }
+
+            subtitleBloc.add(ChangedSubtitleText(text: result.recognizedWords));
           }
         },
         pauseFor: Duration(milliseconds: (state.pauseTime * 1000).round()),
@@ -113,11 +117,6 @@ class DefaultSttBloc extends Bloc<DefaultSttEvent, DefaultSttState> {
     emit(state.copyWith(recognizedWords: totalHeard.toString()));
   }
 
-  FutureOr<void> _onChangedSubtitleIsOn(
-      ChangedSubtitleIsOn event, Emitter<DefaultSttState> emit) {
-    emit(state.copyWith(isSubtitleOn: event.value));
-  }
-
   FutureOr<void> _onChangedPauseTime(
       ChangedPauseTime event, Emitter<DefaultSttState> emit) async {
     if (state.status != DefaultSttStatus.listening) {
@@ -127,8 +126,12 @@ class DefaultSttBloc extends Bloc<DefaultSttEvent, DefaultSttState> {
 
   @override
   Future<void> close() async {
-    print('default stt bloc close call');
     await state.speechToText!.stop();
     return super.close();
+  }
+
+  FutureOr<void> _onToggleLinkTts(
+      ToggleLinkTts event, Emitter<DefaultSttState> emit) {
+    emit(state.copyWith(linkTts: !state.linkTts));
   }
 }

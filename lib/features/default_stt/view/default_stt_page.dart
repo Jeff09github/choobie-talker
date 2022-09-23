@@ -131,22 +131,28 @@ class DefaultSttSettings extends StatelessWidget {
               width: 8.0,
             ),
             DropdownButton(
-                value: 'AWS Polly',
-                items: <String>['AWS Polly']
-                    .map(
-                      (e) => DropdownMenuItem(
-                        value: e,
-                        child: Text(e),
-                      ),
-                    )
-                    .toList(),
-                onChanged: (value) {}),
+              value: 'AWS Polly',
+              items: <String>['AWS Polly']
+                  .map(
+                    (e) => DropdownMenuItem(
+                      value: e,
+                      child: Text(e),
+                    ),
+                  )
+                  .toList(),
+              onChanged: (value) {},
+            ),
           ],
         ),
         Row(
           children: [
-            Text('Enable Link TTS'),
-            Switch(value: true, onChanged: (value) {}),
+            const Text('Link TTS'),
+            Switch(
+              value: state.linkTts,
+              onChanged: (value) {
+                context.read<DefaultSttBloc>().add(const ToggleLinkTts());
+              },
+            ),
           ],
         ),
       ],

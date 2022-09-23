@@ -13,9 +13,11 @@ class HomeState extends Equatable {
   final HomeStatus status;
   final Selected selected;
 
+
   HomeState copyWith({
     HomeStatus? status,
     Selected? selected,
+    bool? subtitleOnly,
   }) =>
       HomeState(
         status: status ?? this.status,

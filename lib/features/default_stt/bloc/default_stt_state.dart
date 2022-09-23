@@ -10,20 +10,20 @@ class DefaultSttState extends Equatable {
     this.isAvailable = false,
     this.lastHeard = "",
     this.pauseTime = 1.5, //3 secs max //listenfore 30 secs max need to add
-    this.isSubtitleOn = false,
     this.recognizedWords = 'Speech Log',
+    this.linkTts = false,
   });
 
   final SpeechToText? speechToText;
   final List<LocaleName> localNames;
-  final DefaultSttStatus status;
   final bool isAvailable;
+
+  final DefaultSttStatus status;
+
   final String lastHeard;
   final double pauseTime;
-
-  final bool isSubtitleOn;
-
   final String recognizedWords;
+  final bool linkTts;
 
   DefaultSttState copyWith({
     DefaultSttStatus? status,
@@ -32,8 +32,8 @@ class DefaultSttState extends Equatable {
     bool? isAvailable,
     String? lastHeard,
     double? pauseTime,
-    bool? isSubtitleOn,
     String? recognizedWords,
+    bool? linkTts,
   }) =>
       DefaultSttState(
         status: status ?? this.status,
@@ -42,8 +42,8 @@ class DefaultSttState extends Equatable {
         isAvailable: isAvailable ?? this.isAvailable,
         lastHeard: lastHeard ?? this.lastHeard,
         pauseTime: pauseTime ?? this.pauseTime,
-        isSubtitleOn: isSubtitleOn ?? this.isSubtitleOn,
         recognizedWords: recognizedWords ?? this.recognizedWords,
+        linkTts: linkTts ?? this.linkTts,
       );
 
   @override
@@ -54,7 +54,7 @@ class DefaultSttState extends Equatable {
         isAvailable,
         lastHeard,
         pauseTime,
-        isSubtitleOn,
-        recognizedWords
+        recognizedWords,
+        linkTts,
       ];
 }

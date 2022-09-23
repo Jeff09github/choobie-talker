@@ -54,3 +54,7 @@ class ChangedPauseTime extends DefaultSttEvent {
   @override
   List<Object> get props => [value];
 }
+
+class ToggleLinkTts extends DefaultSttEvent {
+  const ToggleLinkTts();
+}
