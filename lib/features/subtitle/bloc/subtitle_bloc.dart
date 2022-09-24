@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'package:choobietalker/features/aws_polly/bloc/aws_polly_bloc.dart';
-import 'package:choobietalker/features/translator/bloc/translator_bloc.dart';
-import 'package:choobietalker/shared/model/google_language.dart';
 import 'package:choobietalker/shared/repository/translator_repo.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';

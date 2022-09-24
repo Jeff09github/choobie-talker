@@ -2,6 +2,8 @@ import 'package:choobietalker/features/default_stt/bloc/default_stt_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../shared/widgets/widgets.dart';
+
 class DefaultSttMain extends StatelessWidget {
   const DefaultSttMain({Key? key}) : super(key: key);
 
@@ -80,7 +82,9 @@ class DefaultSttSettings extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('SPEECH TO TEXT'),
+        Text('SPEECH TO TEXT',style: TextStyle(
+          fontSize: 16.0,
+        ),),
         Divider(),
         SizedBox(
           height: 8.0,
@@ -126,11 +130,8 @@ class DefaultSttSettings extends StatelessWidget {
         // ),
         Row(
           children: [
-            Text('TTS to Link'),
-            SizedBox(
-              width: 8.0,
-            ),
-            DropdownButton(
+            CustomDropdownButton(
+              text: 'Text to Speech',
               value: 'AWS Polly',
               items: <String>['AWS Polly']
                   .map(
@@ -140,19 +141,15 @@ class DefaultSttSettings extends StatelessWidget {
                     ),
                   )
                   .toList(),
-              onChanged: (value) {},
+              onChanged: (newValue) {},
             ),
-          ],
-        ),
-        Row(
-          children: [
-            const Text('Link TTS'),
             Switch(
               value: state.linkTts,
               onChanged: (value) {
                 context.read<DefaultSttBloc>().add(const ToggleLinkTts());
               },
             ),
+            state.linkTts ? const Text('ON') : const Text('OFF'),
           ],
         ),
       ],

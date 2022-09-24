@@ -126,7 +126,10 @@ class SettingsView extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-          Text('SETTINGS'),
+          Text(
+            'SETTINGS',
+            style: TextStyle(fontSize: 24.0),
+          ),
           SizedBox(
             height: 24.0,
           ),

@@ -1,5 +1,7 @@
 import 'package:choobietalker/features/subtitle/bloc/subtitle_bloc.dart';
 import 'package:choobietalker/shared/constant.dart';
+import 'package:choobietalker/shared/widgets/custom_dropdownbutton.dart';
+import 'package:choobietalker/shared/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -65,23 +67,26 @@ class SubtitleSettings extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('SUBTITLE'),
+        Text(
+          'SUBTITLE',
+          style: TextStyle(fontSize: 16.0),
+        ),
         Divider(),
         SizedBox(
           height: 8.0,
         ),
-        Text('Font Family'),
-        DropdownButton(
+        CustomDropdownButton(
+          text: 'Font Family',
           value: state.fontFamily,
-          items: Constant()
-              .fonts
-              .map(
-                (e) => DropdownMenuItem(
-                  value: e,
-                  child: Text(e),
+          items: [
+            for (String font in Constant().fonts)
+              DropdownMenuItem(
+                value: font,
+                child: Text(
+                  font,
                 ),
               )
-              .toList(),
+          ],
           onChanged: (newValue) {
             context
                 .read<SubtitleBloc>()
@@ -89,20 +94,20 @@ class SubtitleSettings extends StatelessWidget {
           },
         ),
         SizedBox(
-          width: 16.0,
+          height: 8.0,
         ),
-        Text('Font Weight'),
-        DropdownButton(
+        CustomDropdownButton(
+          text: 'Font Weight',
           value: state.fontWeight,
-          items: Constant()
-              .fontWeights
-              .map(
-                (e) => DropdownMenuItem(
-                  value: e,
-                  child: Text(e.toString().replaceAll('FontWeight.', '')),
+          items: [
+            for (var fontWeight in Constant().fontWeights)
+              DropdownMenuItem(
+                value: fontWeight,
+                child: Text(
+                  fontWeight.toString().replaceAll('FontWeight.', ''),
                 ),
               )
-              .toList(),
+          ],
           onChanged: (newValue) {
             context
                 .read<SubtitleBloc>()
@@ -110,7 +115,7 @@ class SubtitleSettings extends StatelessWidget {
           },
         ),
         SizedBox(
-          width: 16.0,
+          height: 8.0,
         ),
         Text('Height'),
         Slider(
@@ -143,123 +148,47 @@ class SubtitleSettings extends StatelessWidget {
                 .add(ChangedStrokeWidth(strokeWidth: newValue));
           },
         ),
-        Text('Font Color'),
-        GestureDetector(
-          child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 8.0),
-            width: 50.0,
-            height: 25.0,
-            color: state.fontColor,
-          ),
-          onTap: () {
-            showDialog(
-              context: context,
-              builder: (_) {
-                return AlertDialog(
-                  content: SingleChildScrollView(
-                    child: ColorPicker(
-                      pickerColor: state.fontColor,
-                      onColorChanged: (newValue) {
-                        print('fontchange');
-                        context
-                            .read<SubtitleBloc>()
-                            .add(ChangedFontColor(fontColor: newValue));
-                      },
-                    ),
-                  ),
-                  actions: [
-                    ElevatedButton(
-                      child: const Text('Got it'),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
-                );
+        Row(
+          children: [
+            CustomColorPicker(
+              text: 'Font Color',
+              color: state.fontColor,
+              onColorChanged: (newValue) {
+                context
+                    .read<SubtitleBloc>()
+                    .add(ChangedFontColor(fontColor: newValue));
               },
-            );
+            ),
+            CustomColorPicker(
+              text: 'Stroke Color',
+              color: state.strokeColor,
+              onColorChanged: (newValue) {
+                context
+                    .read<SubtitleBloc>()
+                    .add(ChangedStrokeColor(strokeColor: newValue));
+              },
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 8.0,
+        ),
+        CustomColorPicker(
+          text: 'Background Color',
+          color: state.backgroundColor,
+          onColorChanged: (newValue) {
+            context
+                .read<SubtitleBloc>()
+                .add(ChangedBackgroundColor(backgroundColor: newValue));
           },
         ),
         SizedBox(
-          width: 16.0,
-        ),
-        Text('Stroke Color'),
-        GestureDetector(
-          child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 8.0),
-            width: 50.0,
-            height: 25.0,
-            color: state.strokeColor,
-          ),
-          onTap: () {
-            showDialog(
-              context: context,
-              builder: (_) {
-                return AlertDialog(
-                  content: SingleChildScrollView(
-                    child: ColorPicker(
-                        pickerColor: state.strokeColor,
-                        onColorChanged: (newValue) {
-                          context
-                              .read<SubtitleBloc>()
-                              .add(ChangedStrokeColor(strokeColor: newValue));
-                        }),
-                  ),
-                  actions: [
-                    ElevatedButton(
-                      child: const Text('Got it'),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
-                );
-              },
-            );
-          },
-        ),
-        SizedBox(
-          width: 16.0,
-        ),
-        Text('Background Color'),
-        GestureDetector(
-          child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 8.0),
-            width: 50.0,
-            height: 25.0,
-            color: state.backgroundColor,
-          ),
-          onTap: () {
-            showDialog(
-              context: context,
-              builder: (_) {
-                return AlertDialog(
-                  content: SingleChildScrollView(
-                    child: ColorPicker(
-                      pickerColor: state.backgroundColor,
-                      onColorChanged: (newValue) {
-                        context.read<SubtitleBloc>().add(
-                            ChangedBackgroundColor(backgroundColor: newValue));
-                      },
-                    ),
-                  ),
-                  actions: [
-                    ElevatedButton(
-                      child: const Text('Got it'),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
-                );
-              },
-            );
-          },
+          height: 8.0,
         ),
         Row(
           children: [
-            Text('Translate to'),
-            DropdownButton(
+            CustomDropdownButton(
+              text: 'Translate to',
               value: state.translateTo,
               items: Constant()
                   .googleLanguages
@@ -282,211 +211,10 @@ class SubtitleSettings extends StatelessWidget {
                 context.read<SubtitleBloc>().add(const ToggleTranstionOn());
               },
             ),
+            state.translateOn ? const Text('ON') : const Text('OFF'),
           ],
         ),
       ],
     );
-    // return Column(
-    //   children: [
-    //     Row(
-    //       children: [
-    //         Text('Font Family'),
-    //         SizedBox(
-    //           width: 16.0,
-    //         ),
-    //         DropdownButton(
-    //           value: state.fontFamily,
-    //           items: Constant()
-    //               .fonts
-    //               .map(
-    //                 (e) => DropdownMenuItem(
-    //                   value: e,
-    //                   child: Text(e),
-    //                 ),
-    //               )
-    //               .toList(),
-    //           onChanged: (newValue) {
-    //             context
-    //                 .read<SubtitleBloc>()
-    //                 .add(ChangedFontFamily(fontFamily: newValue as String));
-    //           },
-    //         ),
-    //         SizedBox(
-    //           width: 16.0,
-    //         ),
-    //         Text('Font Weight'),
-    //         SizedBox(
-    //           width: 16.0,
-    //         ),
-    //         DropdownButton(
-    //           value: state.fontWeight,
-    //           items: Constant()
-    //               .fontWeights
-    //               .map(
-    //                 (e) => DropdownMenuItem(
-    //                   value: e,
-    //                   child: Text(e.toString().replaceAll('FontWeight.', '')),
-    //                 ),
-    //               )
-    //               .toList(),
-    //           onChanged: (newValue) {
-    //             context
-    //                 .read<SubtitleBloc>()
-    //                 .add(ChangedFontWeight(fontWeight: newValue as FontWeight));
-    //           },
-    //         ),
-    //         SizedBox(
-    //           width: 16.0,
-    //         ),
-    //         Text('Height'),
-    //         Slider(
-    //           min: 50.0,
-    //           max: 200.0,
-    //           value: state.containerHeight,
-    //           onChanged: (newValue) {
-    //             context
-    //                 .read<SubtitleBloc>()
-    //                 .add(ChangedContainerHeight(height: newValue));
-    //           },
-    //         ),
-    //         Text('Font Size'),
-    //         Slider(
-    //           min: 12.0,
-    //           max: 48.0,
-    //           value: state.fontSize,
-    //           onChanged: (newValue) {
-    //             context
-    //                 .read<SubtitleBloc>()
-    //                 .add(ChangedFontSize(size: newValue));
-    //           },
-    //         ),
-    //         Text('Stroke Width'),
-    //         Slider(
-    //           min: 2.0,
-    //           max: 10.0,
-    //           value: state.strokeWidth,
-    //           onChanged: (newValue) {
-    //             context
-    //                 .read<SubtitleBloc>()
-    //                 .add(ChangedStrokeWidth(strokeWidth: newValue));
-    //           },
-    //         ),
-    //         Text('Font Color'),
-    //         GestureDetector(
-    //           child: Container(
-    //             margin: EdgeInsets.symmetric(horizontal: 8.0),
-    //             width: 50.0,
-    //             height: 25.0,
-    //             color: state.fontColor,
-    //           ),
-    //           onTap: () {
-    //             showDialog(
-    //               context: context,
-    //               builder: (_) {
-    //                 return AlertDialog(
-    //                   content: SingleChildScrollView(
-    //                     child: ColorPicker(
-    //                       pickerColor: state.fontColor,
-    //                       onColorChanged: (newValue) {
-    //                         print('fontchange');
-    //                         context
-    //                             .read<SubtitleBloc>()
-    //                             .add(ChangedFontColor(fontColor: newValue));
-    //                       },
-    //                     ),
-    //                   ),
-    //                   actions: [
-    //                     ElevatedButton(
-    //                       child: const Text('Got it'),
-    //                       onPressed: () {
-    //                         Navigator.of(context).pop();
-    //                       },
-    //                     ),
-    //                   ],
-    //                 );
-    //               },
-    //             );
-    //           },
-    //         ),
-    //         SizedBox(
-    //           width: 16.0,
-    //         ),
-    //         Text('Stroke Color'),
-    //         GestureDetector(
-    //           child: Container(
-    //             margin: EdgeInsets.symmetric(horizontal: 8.0),
-    //             width: 50.0,
-    //             height: 25.0,
-    //             color: state.strokeColor,
-    //           ),
-    //           onTap: () {
-    //             showDialog(
-    //               context: context,
-    //               builder: (_) {
-    //                 return AlertDialog(
-    //                   content: SingleChildScrollView(
-    //                     child: ColorPicker(
-    //                         pickerColor: state.strokeColor,
-    //                         onColorChanged: (newValue) {
-    //                           context.read<SubtitleBloc>().add(
-    //                               ChangedStrokeColor(strokeColor: newValue));
-    //                         }),
-    //                   ),
-    //                   actions: [
-    //                     ElevatedButton(
-    //                       child: const Text('Got it'),
-    //                       onPressed: () {
-    //                         Navigator.of(context).pop();
-    //                       },
-    //                     ),
-    //                   ],
-    //                 );
-    //               },
-    //             );
-    //           },
-    //         ),
-    //         SizedBox(
-    //           width: 16.0,
-    //         ),
-    //         Text('Background Color'),
-    //         GestureDetector(
-    //           child: Container(
-    //             margin: EdgeInsets.symmetric(horizontal: 8.0),
-    //             width: 50.0,
-    //             height: 25.0,
-    //             color: state.backgroundColor,
-    //           ),
-    //           onTap: () {
-    //             showDialog(
-    //               context: context,
-    //               builder: (_) {
-    //                 return AlertDialog(
-    //                   content: SingleChildScrollView(
-    //                     child: ColorPicker(
-    //                       pickerColor: state.backgroundColor,
-    //                       onColorChanged: (newValue) {
-    //                         context.read<SubtitleBloc>().add(
-    //                             ChangedBackgroundColor(
-    //                                 backgroundColor: newValue));
-    //                       },
-    //                     ),
-    //                   ),
-    //                   actions: [
-    //                     ElevatedButton(
-    //                       child: const Text('Got it'),
-    //                       onPressed: () {
-    //                         Navigator.of(context).pop();
-    //                       },
-    //                     ),
-    //                   ],
-    //                 );
-    //               },
-    //             );
-    //           },
-    //         ),
-    //       ],
-    //     ),
-    //   ],
-    // );
   }
 }
