@@ -1,8 +1,11 @@
 import 'package:aws_polly_api/polly-2016-06-10.dart';
 import 'package:choobietalker/features/aws_polly/bloc/aws_polly_bloc.dart';
 import 'package:choobietalker/features/aws_polly/view/voices_dropdownbutton.dart';
+import 'package:choobietalker/shared/widgets/custom_dropdownbutton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../shared/constant.dart';
 
 class AwsPollyPage extends StatelessWidget {
   const AwsPollyPage({Key? key}) : super(key: key);
@@ -26,14 +29,19 @@ class AwsPollySettings extends StatelessWidget {
           );
         } else if (state.status == AwsPollyStatus.success) {
           return Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('AWS POLLY'),
+              Text(
+                'TEXT TO SPEECH (AWS Polly)',
+                style: TextStyle(
+                  fontSize: 16.0,
+                ),
+              ),
               Divider(),
               SizedBox(
                 height: 8.0,
               ),
-              Text('Filter'),
+              Text('Voices Filter'),
               Row(
                 children: [
                   Radio<Gender>(
@@ -60,19 +68,39 @@ class AwsPollySettings extends StatelessWidget {
                   Text('Female'),
                 ],
               ),
-              Row(
-                children: [
-                  Text('Select Voice'),
-                  VoicesDropdownButton(
-                    value: state.selectedVoice,
-                    items: state.filteredVoices,
-                    onChanged: (newValue) {
-                      context
-                          .read<AwsPollyBloc>()
-                          .add(AwsPollyChangedSelectedVoice(voice: newValue));
-                    },
-                  ),
+              SizedBox(
+                height: 8.0,
+              ),
+              CustomDropdownButton(
+                value: state.selectedVoice,
+                items: [
+                  for (Voice voice in state.filteredVoices)
+                    DropdownMenuItem(
+                        value: voice,
+                        child: Text('${voice.name} (${voice.languageName})'))
                 ],
+                onChanged: (newValue) {
+                  context.read<AwsPollyBloc>().add(
+                      AwsPollyChangedSelectedVoice(voice: newValue as Voice));
+                },
+                text: 'Voice: ',
+              ),
+              // Row(
+              //   children: [
+              //     Text('Select Voice'),
+              //     VoicesDropdownButton(
+              //       value: state.selectedVoice,
+              //       items: state.filteredVoices,
+              //       onChanged: (newValue) {
+              //         context
+              //             .read<AwsPollyBloc>()
+              //             .add(AwsPollyChangedSelectedVoice(voice: newValue));
+              //       },
+              //     ),
+              //   ],
+              // ),
+              SizedBox(
+                height: 8.0,
               ),
               Text('Sample Rate'),
               Row(
@@ -113,6 +141,54 @@ class AwsPollySettings extends StatelessWidget {
                     },
                   ),
                   Text('24000'),
+                ],
+              ),
+              Row(
+                children: [
+                  Text('Pitch'),
+                  Slider(
+                    value: state.pitch,
+                    onChanged: (value) {
+                      context
+                          .read<AwsPollyBloc>()
+                          .add(AwsPollyChangedPitch(value));
+                    },
+                    min: -100,
+                    max: 100,
+                  ),
+                  Text('${state.pitch.toInt()}%'),
+                ],
+              ),
+
+              Row(
+                children: [
+                  CustomDropdownButton(
+                    text: 'Translate to',
+                    value: state.translateTo,
+                    items: Constant()
+                        .googleLanguages
+                        .map(
+                          (e) => DropdownMenuItem(
+                            value: e.code,
+                            child: Text(e.name),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (newValue) {
+                      context.read<AwsPollyBloc>().add(
+                          AwsPollyChangedTranslation(
+                              languageCode: newValue as String));
+                    },
+                  ),
+                  Switch(
+                    value: state.translationOn,
+                    onChanged: (newValue) {
+                      context
+                          .read<AwsPollyBloc>()
+                          .add(const AwsPollyToggleTranstionOn());
+                    },
+                  ),
+                  state.translationOn ? const Text('ON') : const Text('OFF'),
                 ],
               ),
             ],

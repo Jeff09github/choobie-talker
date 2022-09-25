@@ -35,6 +35,13 @@ class AwsPollyChangedSampleRate extends AwsPollyEvent {
   List<Object> get props => [sampleRate];
 }
 
+class AwsPollyChangedPitch extends AwsPollyEvent {
+  const AwsPollyChangedPitch(this.pitch);
+  final double pitch;
+  @override
+  List<Object> get props => [pitch];
+}
+
 class AwsPollySynthesizeSpeech extends AwsPollyEvent {
   const AwsPollySynthesizeSpeech({required this.text});
   final String text;
@@ -49,4 +56,16 @@ class AwsPollySpeech extends AwsPollyEvent {
 
   @override
   List<Object> get props => [uint8list];
+}
+
+class AwsPollyChangedTranslation extends AwsPollyEvent {
+  const AwsPollyChangedTranslation({required this.languageCode});
+  final String languageCode;
+
+  @override
+  List<Object> get props => [languageCode];
+}
+
+class AwsPollyToggleTranstionOn extends AwsPollyEvent {
+  const AwsPollyToggleTranstionOn();
 }

@@ -42,9 +42,9 @@ class HomePage extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) => AwsPollyBloc(
-              awsPollyApiRepo: context.read<AwsPollyApiRepo>(),
-            ),
-            // ..add(const AwsPollyInitial()),
+                awsPollyApiRepo: context.read<AwsPollyApiRepo>(),
+                translatorRepository: context.read<TranslatorRepository>())
+              ..add(const AwsPollyInitial()),
             lazy: false,
           ),
           BlocProvider(
@@ -123,26 +123,29 @@ class SettingsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Text(
-            'SETTINGS',
-            style: TextStyle(fontSize: 24.0),
-          ),
-          SizedBox(
-            height: 24.0,
-          ),
-          DefaultSttSettings(),
-          SizedBox(
-            height: 24.0,
-          ),
-          AwsPollySettings(),
-          SizedBox(
-            height: 24.0,
-          ),
-          SubtitleSettings(),
-        ],
+    return Scrollbar(
+      thumbVisibility: true,
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Text(
+              'SETTINGS',
+              style: TextStyle(fontSize: 24.0),
+            ),
+            SizedBox(
+              height: 24.0,
+            ),
+            DefaultSttSettings(),
+            SizedBox(
+              height: 24.0,
+            ),
+            AwsPollySettings(),
+            SizedBox(
+              height: 24.0,
+            ),
+            SubtitleSettings(),
+          ],
+        ),
       ),
     );
   }

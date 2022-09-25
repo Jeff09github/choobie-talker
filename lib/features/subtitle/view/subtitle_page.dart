@@ -104,7 +104,7 @@ class SubtitleSettings extends StatelessWidget {
               DropdownMenuItem(
                 value: fontWeight,
                 child: Text(
-                  fontWeight.toString().replaceAll('FontWeight.', ''),
+                  fontWeight.toString().replaceAll('FontWeight.w', ''),
                 ),
               )
           ],
