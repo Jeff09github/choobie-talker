@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:choobietalker/features/aws_polly/bloc/aws_polly_bloc.dart';
+import 'package:choobietalker/shared/model/text_log.dart';
 import 'package:choobietalker/shared/repository/translator_repo.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,7 @@ class SubtitleBloc extends Bloc<SubtitleEvent, SubtitleState> {
     on<ChangedSubtitleText>(_onChangedSubtitleText);
     on<ChangedTranslateTo>(_onChangedTranslationTo);
     on<ToggleTranstionOn>(_onToggleTranslationOn);
+    on<AddTextLog>(_onAddTextLog);
   }
 
   final AwsPollyBloc awsPollyBloc;
@@ -46,6 +48,8 @@ class SubtitleBloc extends Bloc<SubtitleEvent, SubtitleState> {
       text = await translatorRepository.translate(
           text: text, languageCode: state.translateTo);
     }
+    final textLog = TextLog(text: text, createdAt: DateTime.now());
+    add(AddTextLog(textLog: textLog));
     emit(state.copyWith(text: text));
   }
 
@@ -87,5 +91,13 @@ class SubtitleBloc extends Bloc<SubtitleEvent, SubtitleState> {
   FutureOr<void> _onToggleTranslationOn(
       ToggleTranstionOn event, Emitter<SubtitleState> emit) {
     emit(state.copyWith(translateOn: !state.translateOn));
+  }
+
+  FutureOr<void> _onAddTextLog(AddTextLog event, Emitter<SubtitleState> emit) {
+    emit(
+      state.copyWith(
+        textlogs: [...state.textlogs, event.textLog],
+      ),
+    );
   }
 }

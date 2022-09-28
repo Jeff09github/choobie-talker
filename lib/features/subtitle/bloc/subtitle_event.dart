@@ -83,3 +83,11 @@ class ChangedTranslateTo extends SubtitleEvent {
 class ToggleTranstionOn extends SubtitleEvent {
   const ToggleTranstionOn();
 }
+
+class AddTextLog extends SubtitleEvent {
+  const AddTextLog({required this.textLog});
+  final TextLog textLog;
+
+  @override
+  List<Object> get props => [textLog];
+}

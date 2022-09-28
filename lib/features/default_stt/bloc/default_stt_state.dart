@@ -8,10 +8,9 @@ class DefaultSttState extends Equatable {
     this.speechToText,
     this.localNames = const [],
     this.isAvailable = false,
-    this.lastHeard = "",
     this.pauseTime = 1.5, //3 secs max //listenfore 30 secs max need to add
-    this.recognizedWords = 'Speech Log',
     this.linkTts = false,
+    this.textlogs = const [],
   });
 
   final SpeechToText? speechToText;
@@ -20,10 +19,9 @@ class DefaultSttState extends Equatable {
 
   final DefaultSttStatus status;
 
-  final String lastHeard;
   final double pauseTime;
-  final String recognizedWords;
   final bool linkTts;
+  final List<TextLog> textlogs;
 
   DefaultSttState copyWith({
     DefaultSttStatus? status,
@@ -34,16 +32,16 @@ class DefaultSttState extends Equatable {
     double? pauseTime,
     String? recognizedWords,
     bool? linkTts,
+    List<TextLog>? textlogs,
   }) =>
       DefaultSttState(
         status: status ?? this.status,
         speechToText: speechToText ?? this.speechToText,
         localNames: localNames ?? this.localNames,
         isAvailable: isAvailable ?? this.isAvailable,
-        lastHeard: lastHeard ?? this.lastHeard,
         pauseTime: pauseTime ?? this.pauseTime,
-        recognizedWords: recognizedWords ?? this.recognizedWords,
         linkTts: linkTts ?? this.linkTts,
+        textlogs: textlogs ?? this.textlogs,
       );
 
   @override
@@ -52,9 +50,8 @@ class DefaultSttState extends Equatable {
         speechToText,
         localNames,
         isAvailable,
-        lastHeard,
         pauseTime,
-        recognizedWords,
         linkTts,
+        textlogs,
       ];
 }

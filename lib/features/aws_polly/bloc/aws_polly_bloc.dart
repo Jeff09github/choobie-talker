@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:just_audio/just_audio.dart';
 
 import '../../../shared/byte_source.dart';
+import '../../../shared/model/text_log.dart';
 
 part 'aws_polly_event.dart';
 part 'aws_polly_state.dart';
@@ -26,6 +27,7 @@ class AwsPollyBloc extends Bloc<AwsPollyEvent, AwsPollyState> {
     on<AwsPollyChangedPitch>(_onAwsPollyChangedPitch);
     on<AwsPollyChangedTranslation>(_onAwsPollyChangedTranslation);
     on<AwsPollyToggleTranstionOn>(_onAwsPollyToggleTranslationOn);
+    on<AwsPollyAddTextLog>(_onAwsPollyAddTextLog);
   }
 
   final AwsPollyApiRepo awsPollyApiRepo;
@@ -79,13 +81,14 @@ class AwsPollyBloc extends Bloc<AwsPollyEvent, AwsPollyState> {
           text: text, languageCode: state.translateTo);
     }
     final result = await awsPollyApiRepo.synthesizeSpeech(
-      text:
-          '<speak><prosody pitch="${state.pitch}%">$text.</prosody></speak>',
+      text: '<speak><prosody pitch="${state.pitch}%">$text.</prosody></speak>',
       voice: state.selectedVoice!,
       sampleRate: state.sampleRate,
     );
     if (result == null) return;
+    final textLog = TextLog(text: text, createdAt: DateTime.now());
     add(AwsPollySpeech(uint8list: result));
+    add(AwsPollyAddTextLog(textLog: textLog));
   }
 
   FutureOr<void> _onAwsPollySpeech(
@@ -108,5 +111,14 @@ class AwsPollyBloc extends Bloc<AwsPollyEvent, AwsPollyState> {
   FutureOr<void> _onAwsPollyToggleTranslationOn(
       AwsPollyToggleTranstionOn event, Emitter<AwsPollyState> emit) {
     emit(state.copyWith(translationOn: !state.translationOn));
+  }
+
+  FutureOr<void> _onAwsPollyAddTextLog(
+      AwsPollyAddTextLog event, Emitter<AwsPollyState> emit) {
+    emit(
+      state.copyWith(
+        textlogs: [...state.textlogs, event.textLog],
+      ),
+    );
   }
 }

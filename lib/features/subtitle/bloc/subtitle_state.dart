@@ -16,6 +16,7 @@ class SubtitleState extends Equatable {
     this.status = SubtitleStatus.initial,
     this.translateTo = 'en',
     this.translateOn = false,
+    this.textlogs = const [],
   });
 
   final SubtitleStatus status;
@@ -31,6 +32,7 @@ class SubtitleState extends Equatable {
 
   final String translateTo;
   final bool translateOn;
+  final List<TextLog> textlogs;
 
   SubtitleState copyWith({
     SubtitleStatus? status,
@@ -45,6 +47,7 @@ class SubtitleState extends Equatable {
     String? text,
     String? translateTo,
     bool? translateOn,
+    List<TextLog>? textlogs,
   }) =>
       SubtitleState(
         status: status ?? this.status,
@@ -59,6 +62,7 @@ class SubtitleState extends Equatable {
         text: text ?? this.text,
         translateTo: translateTo ?? this.translateTo,
         translateOn: translateOn ?? this.translateOn,
+        textlogs: textlogs ?? this.textlogs,
       );
 
   @override
@@ -74,6 +78,7 @@ class SubtitleState extends Equatable {
         strokeWidth,
         text,
         translateTo,
-        translateOn
+        translateOn,
+        textlogs,
       ];
 }

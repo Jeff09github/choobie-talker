@@ -12,61 +12,41 @@ class DefaultSttMain extends StatelessWidget {
     final state = context.watch<DefaultSttBloc>().state;
 
     return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Column(
-          children: [
-            SizedBox(
-              height: 8.0,
-            ),
-            TextFormField(
-              maxLines: 15,
-              readOnly: true,
-              decoration: InputDecoration(
-                hintText: context
-                    .watch<DefaultSttBloc>()
-                    .state
-                    .recognizedWords
-                    .toString(),
-                hintStyle: TextStyle(fontSize: 8.0),
-                border: OutlineInputBorder(),
-              ),
-            ),
-            SizedBox(
-              height: 8.0,
-            ),
-            IconButton(
-              onPressed: () {
-                state.status == DefaultSttStatus.listening
-                    ? context.read<DefaultSttBloc>().add(const StopListening())
-                    : context
-                        .read<DefaultSttBloc>()
-                        .add(const StartListening());
-              },
-              icon: Icon(
-                Icons.mic,
-                color: state.status == DefaultSttStatus.listening
-                    ? Colors.redAccent
-                    : null,
-              ),
-            ),
-          ],
+        SizedBox(
+          height: 8.0,
         ),
-        // state.isSubtitleOn
-        //     ? Container(
-        //         padding: EdgeInsets.all(8.0),
-        //         height: 130.0,
-        //         color: Colors.green,
-        //         alignment: Alignment.center,
-        //         child: Text(
-        //           state.lastHeard,
-        //           textAlign: TextAlign.center,
-        //           style: TextStyle(
-        //             fontSize: 24.0,
-        //           ),
-        //         ),
-        //       )
-        //     : SizedBox(),
+        // TextFormField(
+        //   readOnly: true,
+        //   decoration: InputDecoration(
+        //     hintText: context
+        //         .watch<DefaultSttBloc>()
+        //         .state
+        //         .recognizedWords
+        //         .toString(),
+        //     hintStyle: TextStyle(fontSize: 8.0),
+        //     border: OutlineInputBorder(),
+        //   ),
+        //   expands: true,
+        // ),
+        SizedBox(
+          height: 8.0,
+        ),
+        IconButton(
+          onPressed: () {
+            state.status == DefaultSttStatus.listening
+                ? context.read<DefaultSttBloc>().add(const StopListening())
+                : context
+                    .read<DefaultSttBloc>()
+                    .add(const StartListening());
+          },
+          icon: Icon(
+            Icons.mic,
+            color: state.status == DefaultSttStatus.listening
+                ? Colors.redAccent
+                : null,
+          ),
+        ),
       ],
     );
   }
@@ -82,9 +62,12 @@ class DefaultSttSettings extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('SPEECH TO TEXT',style: TextStyle(
-          fontSize: 16.0,
-        ),),
+        Text(
+          'SPEECH TO TEXT',
+          style: TextStyle(
+            fontSize: 16.0,
+          ),
+        ),
         Divider(),
         SizedBox(
           height: 8.0,

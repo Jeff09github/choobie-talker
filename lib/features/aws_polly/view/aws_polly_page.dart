@@ -159,11 +159,12 @@ class AwsPollySettings extends StatelessWidget {
                   Text('${state.pitch.toInt()}%'),
                 ],
               ),
-
+              Text('Note: Voice and Translation language should be the same to increase accuracy of the output'),
+              SizedBox(height: 8.0,),
               Row(
                 children: [
                   CustomDropdownButton(
-                    text: 'Translate to',
+                    text: 'Translate Voice to',
                     value: state.translateTo,
                     items: Constant()
                         .googleLanguages

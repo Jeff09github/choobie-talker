@@ -43,8 +43,8 @@ class HomePage extends StatelessWidget {
           BlocProvider(
             create: (context) => AwsPollyBloc(
                 awsPollyApiRepo: context.read<AwsPollyApiRepo>(),
-                translatorRepository: context.read<TranslatorRepository>())
-              ..add(const AwsPollyInitial()),
+                translatorRepository: context.read<TranslatorRepository>()),
+            // ..add(const AwsPollyInitial()),
             lazy: false,
           ),
           BlocProvider(
@@ -156,6 +156,132 @@ class MainView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultSttMain();
+    return Row(
+      children: [
+        // DefaultSttMain(),
+        Expanded(
+          child: BlocBuilder<DefaultSttBloc, DefaultSttState>(
+            builder: (context, state) {
+              return Column(
+                children: [
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 16.0, right: 16.0),
+                      padding: EdgeInsets.all(8.0),
+                      constraints: BoxConstraints.expand(),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8.0),
+                        border: Border.all(
+                          color: Colors.white,
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Speech to Text Log'),
+                          Divider(),
+                          SizedBox(
+                            height: 8.0,
+                          ),
+                          ...List.generate(
+                            state.textlogs.length,
+                            (index) => Text(state.textlogs[index].toString()),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      state.status == DefaultSttStatus.listening
+                          ? context
+                              .read<DefaultSttBloc>()
+                              .add(const StopListening())
+                          : context
+                              .read<DefaultSttBloc>()
+                              .add(const StartListening());
+                    },
+                    icon: Icon(
+                      Icons.mic,
+                      color: state.status == DefaultSttStatus.listening
+                          ? Colors.redAccent
+                          : null,
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+        Expanded(
+          child: Column(
+            children: [
+              BlocBuilder<AwsPollyBloc, AwsPollyState>(
+                builder: (context, state) {
+                  return Expanded(
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 8.0),
+                      padding: EdgeInsets.all(8.0),
+                      constraints: BoxConstraints.expand(),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8.0),
+                        border: Border.all(
+                          color: Colors.white,
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Text to Speech Log'),
+                          Divider(),
+                          SizedBox(
+                            height: 8.0,
+                          ),
+                          ...List.generate(
+                            state.textlogs.length,
+                            (index) => Text(state.textlogs[index].toString()),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+              BlocBuilder<SubtitleBloc, SubtitleState>(
+                builder: (context, state) {
+                  return Expanded(
+                    child: Container(
+                      margin: EdgeInsets.only(top: 8.0),
+                      padding: EdgeInsets.all(8.0),
+                      constraints: BoxConstraints.expand(),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8.0),
+                        border: Border.all(
+                          color: Colors.white,
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('SubtitleLog'),
+                          Divider(),
+                          SizedBox(
+                            height: 8.0,
+                          ),
+                          ...List.generate(
+                            state.textlogs.length,
+                            (index) => Text(state.textlogs[index].toString()),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }

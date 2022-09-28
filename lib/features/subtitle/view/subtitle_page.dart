@@ -188,7 +188,7 @@ class SubtitleSettings extends StatelessWidget {
         Row(
           children: [
             CustomDropdownButton(
-              text: 'Translate to',
+              text: 'Translate Subtitle to',
               value: state.translateTo,
               items: Constant()
                   .googleLanguages

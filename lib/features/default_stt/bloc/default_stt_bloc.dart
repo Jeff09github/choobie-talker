@@ -7,6 +7,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
+import '../../../shared/model/text_log.dart';
+
 part 'default_stt_event.dart';
 part 'default_stt_state.dart';
 
@@ -19,10 +21,9 @@ class DefaultSttBloc extends Bloc<DefaultSttEvent, DefaultSttState> {
     on<DefaultSttInitialize>(_onDefaultSttInitialize);
     on<StartListening>(_onStartListening);
     on<StopListening>(_onStopListening);
-    on<LastHeardChanged>(_onLastHeardChanged);
     on<ChangedPauseTime>(_onChangedPauseTime);
-    on<ChangedRecognizedWords>(_onChangeRecognizedWords);
     on<ToggleLinkTts>(_onToggleLinkTts);
+    on<AddTextLog>(_onAddTextLog);
   }
 
   final AwsPollyBloc awsPollyBloc;
@@ -73,9 +74,9 @@ class DefaultSttBloc extends Bloc<DefaultSttEvent, DefaultSttState> {
         listenMode: ListenMode.dictation,
         onResult: (result) {
           if (result.finalResult) {
-            add(LastHeardChanged(lastHeard: result.recognizedWords));
-            add(ChangedRecognizedWords(words: result.recognizedWords));
-
+            final textLog = TextLog(
+                text: result.recognizedWords, createdAt: DateTime.now());
+            add(AddTextLog(textLog: textLog));
             if (state.linkTts) {
               awsPollyBloc
                   .add(AwsPollySynthesizeSpeech(text: result.recognizedWords));
@@ -100,23 +101,6 @@ class DefaultSttBloc extends Bloc<DefaultSttEvent, DefaultSttState> {
     emit(state.copyWith(status: DefaultSttStatus.off));
   }
 
-  FutureOr<void> _onLastHeardChanged(
-      LastHeardChanged event, Emitter<DefaultSttState> emit) {
-    emit(state.copyWith(
-      status: DefaultSttStatus.done,
-      lastHeard: event.lastHeard,
-    ));
-  }
-
-  FutureOr<void> _onChangeRecognizedWords(
-      ChangedRecognizedWords event, Emitter<DefaultSttState> emit) {
-    StringBuffer totalHeard = StringBuffer();
-    totalHeard.write(state.recognizedWords);
-    totalHeard.write('\n');
-    totalHeard.write(event.words);
-    emit(state.copyWith(recognizedWords: totalHeard.toString()));
-  }
-
   FutureOr<void> _onChangedPauseTime(
       ChangedPauseTime event, Emitter<DefaultSttState> emit) async {
     if (state.status != DefaultSttStatus.listening) {
@@ -133,5 +117,14 @@ class DefaultSttBloc extends Bloc<DefaultSttEvent, DefaultSttState> {
   FutureOr<void> _onToggleLinkTts(
       ToggleLinkTts event, Emitter<DefaultSttState> emit) {
     emit(state.copyWith(linkTts: !state.linkTts));
+  }
+
+  FutureOr<void> _onAddTextLog(
+      AddTextLog event, Emitter<DefaultSttState> emit) {
+    emit(
+      state.copyWith(
+        textlogs: [...state.textlogs, event.textLog],
+      ),
+    );
   }
 }

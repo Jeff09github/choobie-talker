@@ -20,6 +20,7 @@ class AwsPollyState extends Equatable {
     required this.filter,
     this.translateTo = 'en',
     this.translationOn = false,
+    this.textlogs = const [],
   });
 
   final AwsPollyStatus status;
@@ -31,6 +32,7 @@ class AwsPollyState extends Equatable {
   final String sampleRate;
   final String translateTo;
   final bool translationOn;
+  final List<TextLog> textlogs;
 
   AwsPollyState copyWith({
     AwsPollyStatus? status,
@@ -42,6 +44,7 @@ class AwsPollyState extends Equatable {
     double? pitch,
     String? translateTo,
     bool? translationOn,
+    List<TextLog>? textlogs,
   }) =>
       AwsPollyState(
         status: status ?? this.status,
@@ -53,6 +56,7 @@ class AwsPollyState extends Equatable {
         pitch: pitch ?? this.pitch,
         translateTo: translateTo ?? this.translateTo,
         translationOn: translationOn ?? this.translationOn,
+        textlogs: textlogs ?? this.textlogs,
       );
 
   @override
@@ -66,5 +70,6 @@ class AwsPollyState extends Equatable {
         pitch,
         translateTo,
         translationOn,
+        textlogs,
       ];
 }

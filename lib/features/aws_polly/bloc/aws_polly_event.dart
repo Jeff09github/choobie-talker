@@ -69,3 +69,11 @@ class AwsPollyChangedTranslation extends AwsPollyEvent {
 class AwsPollyToggleTranstionOn extends AwsPollyEvent {
   const AwsPollyToggleTranstionOn();
 }
+
+class AwsPollyAddTextLog extends AwsPollyEvent {
+  const AwsPollyAddTextLog({required this.textLog});
+  final TextLog textLog;
+
+  @override
+  List<Object> get props => [textLog];
+}
