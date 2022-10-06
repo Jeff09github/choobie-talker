@@ -7,40 +7,35 @@ class CustomDropdownButton extends StatelessWidget {
     required this.items,
     required this.onChanged,
     required this.text,
+    this.tooltip,
   }) : super(key: key);
 
   final Object? value;
   final List<DropdownMenuItem<Object>>? items;
   final Function(Object?)? onChanged;
   final String text;
+  final Widget? tooltip;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8.0),
-        border: Border.all(
-          color: Colors.white,
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text('$text '),
+        if (tooltip != null) tooltip!,
+        Text(' : '),
+        const SizedBox(
+          width: 8.0,
         ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text('$text :'),
-          const SizedBox(
-            width: 8.0,
-          ),
-          DropdownButton(
-            value: value,
-            items: items,
-            onChanged: onChanged,
-            underline: const SizedBox.shrink(),
-            alignment: AlignmentDirectional.center,
-            style: const TextStyle(fontSize: 14.0, color: Colors.white),
-          ),
-        ],
-      ),
+        DropdownButton(
+          value: value,
+          items: items,
+          onChanged: onChanged,
+          underline: const SizedBox.shrink(),
+          alignment: AlignmentDirectional.center,
+          style: const TextStyle(fontSize: 14.0, color: Colors.white),
+        ),
+      ],
     );
   }
 }

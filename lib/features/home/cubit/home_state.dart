@@ -7,24 +7,24 @@ enum Selected { defaultStt, defaultTts, polly }
 class HomeState extends Equatable {
   const HomeState({
     this.status = HomeStatus.initial,
-    this.selected = Selected.defaultStt,
+    this.showSubtitleOnly = false,
   });
 
   final HomeStatus status;
-  final Selected selected;
 
+  final bool showSubtitleOnly;
 
   HomeState copyWith({
     HomeStatus? status,
     Selected? selected,
-    bool? subtitleOnly,
+    bool? showSubtitleOnly,
   }) =>
       HomeState(
         status: status ?? this.status,
-        selected: selected ?? this.selected,
+        showSubtitleOnly: showSubtitleOnly ?? this.showSubtitleOnly,
       );
 
   @override
   // TODO: implement props
-  List<Object?> get props => [status, selected];
+  List<Object?> get props => [status, showSubtitleOnly];
 }

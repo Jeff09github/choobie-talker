@@ -21,13 +21,16 @@ class AwsPollyBloc extends Bloc<AwsPollyEvent, AwsPollyState> {
     on<AwsPollyInitial>(_onAwsPollyInitial);
     on<AwsPollyChangedSelectedVoice>(_onAwsPollyChangedSelectedVoice);
     on<AwsPollyChangedFilter>(_onAwsPollyChangedFilter);
-    on<AwsPollyChangedSampleRate>(_onAwsPollyChangedSampleRate);
+    on<AwsPollyChangedAudioFrequency>(_onAwsPollyChangedAudioFrequency);
     on<AwsPollySynthesizeSpeech>(_onAwsPollySynthesizeSpeech);
     on<AwsPollySpeech>(_onAwsPollySpeech);
     on<AwsPollyChangedPitch>(_onAwsPollyChangedPitch);
     on<AwsPollyChangedTranslation>(_onAwsPollyChangedTranslation);
     on<AwsPollyToggleTranstionOn>(_onAwsPollyToggleTranslationOn);
     on<AwsPollyAddTextLog>(_onAwsPollyAddTextLog);
+    on<AwsPollyChangedVoiceVolume>(_onAwsPollyChangedVoiceVolume);
+    on<AwsPollyChangedSpeechRate>(_onAwsPollyChangedSpeechRate);
+    on<AwsPollyChangedTimbre>(_onAwsPollyChangedTimbre);
   }
 
   final AwsPollyApiRepo awsPollyApiRepo;
@@ -67,9 +70,9 @@ class AwsPollyBloc extends Bloc<AwsPollyEvent, AwsPollyState> {
         status: AwsPollyStatus.success));
   }
 
-  FutureOr<void> _onAwsPollyChangedSampleRate(
-      AwsPollyChangedSampleRate event, Emitter<AwsPollyState> emit) {
-    emit(state.copyWith(sampleRate: event.sampleRate));
+  FutureOr<void> _onAwsPollyChangedAudioFrequency(
+      AwsPollyChangedAudioFrequency event, Emitter<AwsPollyState> emit) {
+    emit(state.copyWith(audioFrequency: event.audioFrequency));
   }
 
   FutureOr<void> _onAwsPollySynthesizeSpeech(
@@ -80,10 +83,23 @@ class AwsPollyBloc extends Bloc<AwsPollyEvent, AwsPollyState> {
       text = await translatorRepository.translate(
           text: text, languageCode: state.translateTo);
     }
+    final String volume = state.voiceVolume >= 0
+        ? '+${state.voiceVolume}dB'
+        : '${state.voiceVolume}dB';
+
+    String timbre = '';
+
+    if (state.timbre != 0 || state.timbre != -0) {
+      timbre = state.timbre > 0
+          ? 'vocal-tract-length="+${state.timbre}%"'
+          : 'vocal-tract-length="${state.timbre}%"';
+    }
+
     final result = await awsPollyApiRepo.synthesizeSpeech(
-      text: '<speak><prosody pitch="${state.pitch}%">$text.</prosody></speak>',
+      text:
+          '<speak><prosody pitch="${state.pitch}%" rate="${state.speechRate}%" volume="$volume"><amazon:effect phonation="soft"  $timbre>$text..</amazon:effect></prosody></speak>',
       voice: state.selectedVoice!,
-      sampleRate: state.sampleRate,
+      sampleRate: state.audioFrequency,
     );
     if (result == null) return;
     final textLog = TextLog(text: text, createdAt: DateTime.now());
@@ -120,5 +136,20 @@ class AwsPollyBloc extends Bloc<AwsPollyEvent, AwsPollyState> {
         textlogs: [...state.textlogs, event.textLog],
       ),
     );
+  }
+
+  FutureOr<void> _onAwsPollyChangedVoiceVolume(
+      AwsPollyChangedVoiceVolume event, Emitter<AwsPollyState> emit) {
+    emit(state.copyWith(voiceVolume: event.voiceVolume));
+  }
+
+  FutureOr<void> _onAwsPollyChangedSpeechRate(
+      AwsPollyChangedSpeechRate event, Emitter<AwsPollyState> emit) {
+    emit(state.copyWith(speechRate: event.speechRate));
+  }
+
+  FutureOr<void> _onAwsPollyChangedTimbre(
+      AwsPollyChangedTimbre event, Emitter<AwsPollyState> emit) {
+    emit(state.copyWith(timbre: event.timbre));
   }
 }

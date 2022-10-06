@@ -27,17 +27,17 @@ class AwsPollyChangedFilter extends AwsPollyEvent {
   List<Object> get props => [filter];
 }
 
-class AwsPollyChangedSampleRate extends AwsPollyEvent {
-  const AwsPollyChangedSampleRate({required this.sampleRate});
-  final String sampleRate;
+class AwsPollyChangedAudioFrequency extends AwsPollyEvent {
+  const AwsPollyChangedAudioFrequency({required this.audioFrequency});
+  final String audioFrequency;
 
   @override
-  List<Object> get props => [sampleRate];
+  List<Object> get props => [audioFrequency];
 }
 
 class AwsPollyChangedPitch extends AwsPollyEvent {
   const AwsPollyChangedPitch(this.pitch);
-  final double pitch;
+  final int pitch;
   @override
   List<Object> get props => [pitch];
 }
@@ -76,4 +76,25 @@ class AwsPollyAddTextLog extends AwsPollyEvent {
 
   @override
   List<Object> get props => [textLog];
+}
+
+class AwsPollyChangedVoiceVolume extends AwsPollyEvent {
+  const AwsPollyChangedVoiceVolume(this.voiceVolume);
+  final int voiceVolume;
+  @override
+  List<Object> get props => [voiceVolume];
+}
+
+class AwsPollyChangedSpeechRate extends AwsPollyEvent {
+  const AwsPollyChangedSpeechRate(this.speechRate);
+  final int speechRate;
+  @override
+  List<Object> get props => [speechRate];
+}
+
+class AwsPollyChangedTimbre extends AwsPollyEvent {
+  const AwsPollyChangedTimbre(this.timbre);
+  final int timbre;
+  @override
+  List<Object> get props => [timbre];
 }

@@ -26,6 +26,7 @@ class AwsPollyApiRepo {
   Future<Uint8List?> synthesizeSpeech(
       {required String text, required Voice voice, String? sampleRate}) async {
     final output = await _polly.synthesizeSpeech(
+      // engine: Engine.neural,
       outputFormat: OutputFormat.mp3,
       text: text,
       textType: TextType.ssml,

@@ -1,10 +1,10 @@
 import 'package:choobietalker/features/subtitle/bloc/subtitle_bloc.dart';
 import 'package:choobietalker/shared/constant.dart';
-import 'package:choobietalker/shared/widgets/custom_dropdownbutton.dart';
+import 'package:choobietalker/shared/widgets/custom_container.dart';
+import 'package:choobietalker/shared/widgets/custom_slider.dart';
 import 'package:choobietalker/shared/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SubtitlePage extends StatelessWidget {
@@ -68,85 +68,101 @@ class SubtitleSettings extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'SUBTITLE',
+          'SUBTITLE SETTING',
           style: TextStyle(fontSize: 16.0),
         ),
-        Divider(),
-        SizedBox(
-          height: 8.0,
-        ),
-        CustomDropdownButton(
-          text: 'Font Family',
-          value: state.fontFamily,
-          items: [
-            for (String font in Constant().fonts)
-              DropdownMenuItem(
-                value: font,
-                child: Text(
-                  font,
-                ),
-              )
-          ],
-          onChanged: (newValue) {
-            context
-                .read<SubtitleBloc>()
-                .add(ChangedFontFamily(fontFamily: newValue as String));
-          },
+        Divider(
+          thickness: 3.0,
         ),
         SizedBox(
-          height: 8.0,
+          height: 16.0,
         ),
-        CustomDropdownButton(
-          text: 'Font Weight',
-          value: state.fontWeight,
-          items: [
-            for (var fontWeight in Constant().fontWeights)
-              DropdownMenuItem(
-                value: fontWeight,
-                child: Text(
-                  fontWeight.toString().replaceAll('FontWeight.w', ''),
-                ),
-              )
-          ],
-          onChanged: (newValue) {
-            context
-                .read<SubtitleBloc>()
-                .add(ChangedFontWeight(fontWeight: newValue as FontWeight));
-          },
+        CustomContainer(
+          child: CustomDropdownButton(
+            text: 'Font Family',
+            value: state.fontFamily,
+            items: [
+              for (String font in Constant().fonts)
+                DropdownMenuItem(
+                  value: font,
+                  child: Text(
+                    font,
+                  ),
+                )
+            ],
+            onChanged: (newValue) {
+              context
+                  .read<SubtitleBloc>()
+                  .add(ChangedFontFamily(fontFamily: newValue as String));
+            },
+          ),
         ),
         SizedBox(
-          height: 8.0,
+          height: 16.0,
+        ),
+        CustomContainer(
+          child: CustomDropdownButton(
+            text: 'Font Weight',
+            value: state.fontWeight,
+            items: [
+              for (var fontWeight in Constant().fontWeights)
+                DropdownMenuItem(
+                  value: fontWeight,
+                  child: Text(
+                    fontWeight.toString().replaceAll('FontWeight.w', ''),
+                  ),
+                )
+            ],
+            onChanged: (newValue) {
+              context
+                  .read<SubtitleBloc>()
+                  .add(ChangedFontWeight(fontWeight: newValue as FontWeight));
+            },
+          ),
+        ),
+        SizedBox(
+          height: 16.0,
         ),
         Text('Height'),
-        Slider(
-          min: 50.0,
-          max: 200.0,
-          value: state.containerHeight,
-          onChanged: (newValue) {
-            context
-                .read<SubtitleBloc>()
-                .add(ChangedContainerHeight(height: newValue));
-          },
-        ),
+        // Slider(
+        //   min: 50.0,
+        //   max: 200.0,
+        //   value: state.containerHeight,
+        //   onChanged: (newValue) {
+        //     context
+        //         .read<SubtitleBloc>()
+        //         .add(ChangedContainerHeight(height: newValue.roundToDouble()));
+        //   },
+        // ),
+        CustomSlider(
+            value: state.containerHeight,
+            min: 50.0,
+            max: 200.0,
+            onChanged: (newValue) {
+              context.read<SubtitleBloc>().add(
+                  ChangedContainerHeight(height: newValue.roundToDouble()));
+            }),
         Text('Font Size'),
-        Slider(
-          min: 12.0,
-          max: 48.0,
-          value: state.fontSize,
-          onChanged: (newValue) {
-            context.read<SubtitleBloc>().add(ChangedFontSize(size: newValue));
-          },
-        ),
+        CustomSlider(
+            value: state.fontSize,
+            min: 12.0,
+            max: 448.0,
+            onChanged: (newValue) {
+              context
+                  .read<SubtitleBloc>()
+                  .add(ChangedFontSize(size: newValue.roundToDouble()));
+            }),
         Text('Stroke Width'),
-        Slider(
-          min: 2.0,
-          max: 10.0,
-          value: state.strokeWidth,
-          onChanged: (newValue) {
-            context
-                .read<SubtitleBloc>()
-                .add(ChangedStrokeWidth(strokeWidth: newValue));
-          },
+        CustomSlider(
+            value: state.strokeWidth,
+            min: 2.0,
+            max: 10.0,
+            onChanged: (newValue) {
+              context.read<SubtitleBloc>().add(
+                  ChangedStrokeWidth(strokeWidth: newValue.roundToDouble()));
+            }),
+        SizedBox(
+          height: 16.0,
         ),
         Row(
           children: [
@@ -158,6 +174,9 @@ class SubtitleSettings extends StatelessWidget {
                     .read<SubtitleBloc>()
                     .add(ChangedFontColor(fontColor: newValue));
               },
+            ),
+            SizedBox(
+              width: 16.0,
             ),
             CustomColorPicker(
               text: 'Stroke Color',
@@ -171,7 +190,7 @@ class SubtitleSettings extends StatelessWidget {
           ],
         ),
         SizedBox(
-          height: 8.0,
+          height: 16.0,
         ),
         CustomColorPicker(
           text: 'Background Color',
@@ -183,27 +202,29 @@ class SubtitleSettings extends StatelessWidget {
           },
         ),
         SizedBox(
-          height: 8.0,
+          height: 16.0,
         ),
         Row(
           children: [
-            CustomDropdownButton(
-              text: 'Translate Subtitle to',
-              value: state.translateTo,
-              items: Constant()
-                  .googleLanguages
-                  .map(
-                    (e) => DropdownMenuItem(
-                      value: e.code,
-                      child: Text(e.name),
-                    ),
-                  )
-                  .toList(),
-              onChanged: (newValue) {
-                context
-                    .read<SubtitleBloc>()
-                    .add(ChangedTranslateTo(code: newValue as String));
-              },
+            CustomContainer(
+              child: CustomDropdownButton(
+                text: 'Translate Subtitle to',
+                value: state.translateTo,
+                items: Constant()
+                    .googleLanguages
+                    .map(
+                      (e) => DropdownMenuItem(
+                        value: e.code,
+                        child: Text(e.name),
+                      ),
+                    )
+                    .toList(),
+                onChanged: (newValue) {
+                  context
+                      .read<SubtitleBloc>()
+                      .add(ChangedTranslateTo(code: newValue as String));
+                },
+              ),
             ),
             Switch(
               value: state.translateOn,
@@ -213,6 +234,9 @@ class SubtitleSettings extends StatelessWidget {
             ),
             state.translateOn ? const Text('ON') : const Text('OFF'),
           ],
+        ),
+        SizedBox(
+          height: 8.0,
         ),
       ],
     );

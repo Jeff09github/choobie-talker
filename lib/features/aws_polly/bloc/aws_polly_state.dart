@@ -11,28 +11,34 @@ class Filter {
 
 class AwsPollyState extends Equatable {
   const AwsPollyState({
-    this.status = AwsPollyStatus.initial,
+    this.status = AwsPollyStatus.success,
     this.voices = const [],
     this.filteredVoices = const [],
     this.selectedVoice,
-    this.sampleRate = "22050",
+    this.audioFrequency = "22050", //"8000", "16000", "22050", and "24000"
     this.pitch = 0,
     required this.filter,
     this.translateTo = 'en',
     this.translationOn = false,
     this.textlogs = const [],
-  });
+    this.voiceVolume = 0,
+    this.speechRate = 100,
+    this.timbre = 0,
+  }) : assert(speechRate >= 20 && speechRate <= 200);
 
   final AwsPollyStatus status;
   final List<Voice> voices;
   final List<Voice> filteredVoices;
   final Voice? selectedVoice;
-  final double pitch;
+  final int pitch;
   final Filter filter;
-  final String sampleRate;
+  final String audioFrequency;
   final String translateTo;
   final bool translationOn;
   final List<TextLog> textlogs;
+  final int voiceVolume;
+  final int speechRate;
+  final int timbre;
 
   AwsPollyState copyWith({
     AwsPollyStatus? status,
@@ -40,11 +46,14 @@ class AwsPollyState extends Equatable {
     List<Voice>? filteredVoices,
     Voice? selectedVoice,
     Filter? filter,
-    String? sampleRate,
-    double? pitch,
+    String? audioFrequency,
+    int? pitch,
     String? translateTo,
     bool? translationOn,
     List<TextLog>? textlogs,
+    int? voiceVolume,
+    int? speechRate,
+    int? timbre,
   }) =>
       AwsPollyState(
         status: status ?? this.status,
@@ -52,11 +61,14 @@ class AwsPollyState extends Equatable {
         filteredVoices: filteredVoices ?? this.filteredVoices,
         selectedVoice: selectedVoice ?? this.selectedVoice,
         filter: filter ?? this.filter,
-        sampleRate: sampleRate ?? this.sampleRate,
+        audioFrequency: audioFrequency ?? this.audioFrequency,
         pitch: pitch ?? this.pitch,
         translateTo: translateTo ?? this.translateTo,
         translationOn: translationOn ?? this.translationOn,
         textlogs: textlogs ?? this.textlogs,
+        voiceVolume: voiceVolume ?? this.voiceVolume,
+        speechRate: speechRate ?? this.speechRate,
+        timbre: timbre ?? this.timbre,
       );
 
   @override
@@ -66,10 +78,13 @@ class AwsPollyState extends Equatable {
         selectedVoice,
         filter,
         filteredVoices,
-        sampleRate,
+        audioFrequency,
         pitch,
         translateTo,
         translationOn,
         textlogs,
+        voiceVolume,
+        speechRate,
+        timbre,
       ];
 }

@@ -2,53 +2,53 @@ import 'package:choobietalker/features/default_stt/bloc/default_stt_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../shared/widgets/widgets.dart';
+import '../../../shared/widgets/custom_container.dart';
 
-class DefaultSttMain extends StatelessWidget {
-  const DefaultSttMain({Key? key}) : super(key: key);
+class DefaultSttMic extends StatelessWidget {
+  const DefaultSttMic({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<DefaultSttBloc>().state;
-
-    return Column(
-      children: [
-        SizedBox(
-          height: 8.0,
-        ),
-        // TextFormField(
-        //   readOnly: true,
-        //   decoration: InputDecoration(
-        //     hintText: context
-        //         .watch<DefaultSttBloc>()
-        //         .state
-        //         .recognizedWords
-        //         .toString(),
-        //     hintStyle: TextStyle(fontSize: 8.0),
-        //     border: OutlineInputBorder(),
-        //   ),
-        //   expands: true,
-        // ),
-        SizedBox(
-          height: 8.0,
-        ),
-        IconButton(
-          onPressed: () {
-            state.status == DefaultSttStatus.listening
-                ? context.read<DefaultSttBloc>().add(const StopListening())
-                : context
-                    .read<DefaultSttBloc>()
-                    .add(const StartListening());
-          },
-          icon: Icon(
-            Icons.mic,
-            color: state.status == DefaultSttStatus.listening
-                ? Colors.redAccent
-                : null,
-          ),
-        ),
-      ],
+    return IconButton(
+      iconSize: 48.0,
+      onPressed: () {
+        context.watch<DefaultSttBloc>().state.status ==
+                DefaultSttStatus.listening
+            ? context.read<DefaultSttBloc>().add(const StopListening())
+            : context.read<DefaultSttBloc>().add(const StartListening());
+      },
+      icon: Icon(
+        Icons.mic,
+        color: context.watch<DefaultSttBloc>().state.status ==
+                DefaultSttStatus.listening
+            ? Colors.redAccent
+            : null,
+      ),
     );
+
+    // return Column(
+    //   children: [
+    //     SizedBox(
+    //       height: 8.0,
+    //     ),
+    //     SizedBox(
+    //       height: 8.0,
+    //     ),
+    //     IconButton(
+    //       onPressed: () {
+    //         state.status == DefaultSttStatus.listening
+    //             ? context.read<DefaultSttBloc>().add(const StopListening())
+    //             : context.read<DefaultSttBloc>().add(const StartListening());
+    //       },
+    //       icon: Icon(
+    //         Icons.mic,
+    //         color: state.status == DefaultSttStatus.listening
+    //             ? Colors.redAccent
+    //             : null,
+    //       ),
+    //     ),
+    //   ],
+    // );
   }
 }
 
@@ -60,7 +60,7 @@ class DefaultSttSettings extends StatelessWidget {
     final state = context.watch<DefaultSttBloc>().state;
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'SPEECH TO TEXT',
@@ -68,15 +68,31 @@ class DefaultSttSettings extends StatelessWidget {
             fontSize: 16.0,
           ),
         ),
-        Divider(),
+        Divider(
+          thickness: 3.0,
+        ),
         SizedBox(
           height: 8.0,
         ),
-        Text(
-            'Note: sets the maximum duration of a pause in speech with no words detected, after that it automatically restart the listener.'),
         Row(
           children: [
-            Text('Pause Time'),
+            Text(' Pause Time '),
+            Tooltip(
+              child: CustomContainer(
+                radius: 0.0,
+                boxShape: BoxShape.circle,
+                child: Text(
+                  '!',
+                  // style: TextStyle(color: Colors.redAccent),
+                ),
+              ),
+              message:
+                  'Sets the maximum duration of a pause in speech with no words detected, after that it automatically restart the listener.',
+            ),
+          ],
+        ),
+        Row(
+          children: [
             Slider(
               value: state.pauseTime,
               onChanged: (value) {
@@ -87,12 +103,12 @@ class DefaultSttSettings extends StatelessWidget {
               min: 1,
               max: 3,
             ),
-            Text(' ${state.pauseTime.toStringAsFixed(1)}'),
+            Text(state.pauseTime.toStringAsFixed(1)),
           ],
         ),
-        SizedBox(
-          height: 8.0,
-        ),
+        // SizedBox(
+        //   height: 8.0,
+        // ),
         // Row(
         //   children: [
         //     Text('Select Locale'),
@@ -112,19 +128,18 @@ class DefaultSttSettings extends StatelessWidget {
         //   ],
         // ),
         Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            CustomDropdownButton(
-              text: 'Text to Speech',
-              value: 'AWS Polly',
-              items: <String>['AWS Polly']
-                  .map(
-                    (e) => DropdownMenuItem(
-                      value: e,
-                      child: Text(e),
-                    ),
-                  )
-                  .toList(),
-              onChanged: (newValue) {},
+            Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8.0),
+                border: Border.all(
+                  color: Colors.white,
+                ),
+              ),
+              child: Text('Text to Speech'),
             ),
             Switch(
               value: state.linkTts,
@@ -134,6 +149,9 @@ class DefaultSttSettings extends StatelessWidget {
             ),
             state.linkTts ? const Text('ON') : const Text('OFF'),
           ],
+        ),
+        SizedBox(
+          height: 8.0,
         ),
       ],
     );
